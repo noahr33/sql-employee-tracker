@@ -86,7 +86,8 @@ const allDepartments = () => {
 }
 
 const allRoles = () => {
-  const sql = `SELECT * FROM roles;`
+  const sql = `
+  SELECT roles.id, roles.title, roles.salary, department.id, department.name FROM roles JOIN department ON roles.department_id = department.id;`
   connection.query(sql, (err, res) => {
     if (err) throw err
     console.table(res)
@@ -95,7 +96,7 @@ const allRoles = () => {
 }
 
 const allEmployees = () => {
-  const sql = `SELECT * FROM employee;`
+  const sql = `SELECT * FROM employee`
   connection.query(sql, (err, res) => {
     if (err) throw err
     console.table(res)
