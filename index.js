@@ -125,7 +125,48 @@ const addDepartment = () => {
     })
 }
 
-const addRole = () => {}
+const addRole = () => {
+  connection.query(`SELECT * FROM department`, (err, res) => {
+    if (err) throw err
+    let departments = res.map((department) => ({
+      name: department.name,
+      value: department.id,
+    }))
+    inquirer
+      .prompt([
+        {
+          name: 'roleName',
+          type: 'input',
+          message: 'What is the name of the role?',
+        },
+        {
+          name: 'roleSalary',
+          type: 'input',
+          message: 'What is the salary for this role?',
+        },
+        {
+          name: 'whichDepartment',
+          type: 'list',
+          message: 'Which department do you want to add this to?',
+          choices: departments,
+        },
+      ])
+      .then((answer) => {
+        const sql = `INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?);`
+        connection.query(
+          sql,
+          [answer.roleName, answer.roleSalary, answer.whichDepartment],
+          (err, res) => {
+            if (err) throw err
+            console.log(
+              `\n ${answer.name} was successfully added to your database. \n`
+            )
+            promptUser()
+          }
+        )
+      })
+  })
+}
 
 const addEmployee = () => {}
 
